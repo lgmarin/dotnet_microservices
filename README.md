@@ -1,5 +1,15 @@
 
 
+## Install or Update dotnet EF Tools
+
+dotnet tool install --global dotnet-ef
+dotnet tool update --global dotnet-ef
+
+## Migrations
+
+dotnet ef migrations add <migration-name>
+
+dotnet ef database update
 
 ## MySql Docker Image
 
