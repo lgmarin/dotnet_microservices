@@ -76,7 +76,7 @@ public class CategoriesController : ControllerBase
         return Ok(categoryDto);
     }
     
-    [HttpPut("{id}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult<CategoryDTO>> Delete(int id)
     {
         var categoryDto = await _categoryService.GetCategoryById(id);
