@@ -8,72 +8,76 @@ namespace WebShop.ProductApi.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly ICategoryService _categoryService;
+    private readonly IProductService _productService;
 
-    public ProductsController(ICategoryService categoryService)
+
+    public ProductsController(IProductService categoryService)
     {
-        _categoryService = categoryService;
+        _productService = categoryService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoryDTO>>> Get()
+    public async Task<ActionResult<IEnumerable<ProductDTO>>> Get()
     {
-        var categoriesDto = await _categoryService.GetCategories();
-        if (categoriesDto is null)
+        var productsDto = await _productService.GetProducts();
+        if (productsDto is null)
         {
             return NotFound("No categories found.");
         }
-        return Ok(categoriesDto);
-    }
-    
-    [HttpGet("products")]
-    public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetcategoriesProducts()
-    {
-        var categoriesDto = await _categoryService.GetCategoriesProducts();
-        if (categoriesDto is null)
-        {
-            return NotFound("No categories found.");
-        }
-        return Ok(categoriesDto);
+        return Ok(productsDto);
     }
 
-    [HttpGet("{id:int}", Name = "GetCategory")]
-    public async Task<ActionResult<CategoryDTO>> Get(int id)
+    [HttpGet("{id:int}", Name = "GetProduct")]
+    public async Task<ActionResult<ProductDTO>> Get(int id)
     {
-        var categoryDto = await _categoryService.GetCategoryById(id);
-        if (categoryDto is null)
+        var productDto = await _productService.GetProductById(id);
+        if (productDto is null)
         {
             return NotFound("Category not found");
         }
 
-        return Ok(categoryDto);
+        return Ok(productDto);
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post([FromBody] CategoryDTO categoryDto)
+    public async Task<ActionResult> Post([FromBody] ProductDTO productDto)
     {
-        if (categoryDto is null)
+        if (productDto is null)
         {
             return BadRequest("Invalid data.");
         }
 
-        await _categoryService.AddCategory(categoryDto);
+        await _productService.AddProduct(productDto);
 
-        return new CreatedAtRouteResult("GetCategory", new { id = categoryDto.CategoryId }, categoryDto);
+        return new CreatedAtRouteResult("GetProduct",
+            new { id = productDto.CategoryId }, productDto);
     }
 
-    [HttpPut("{id:int")]
-    public async Task<ActionResult> Put(int id, [FromBody] CategoryDTO categoryDto)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put(int id, [FromBody] ProductDTO productDto)
     {
-        if (id != categoryDto.CategoryId)
+        if (id != productDto.CategoryId)
             return BadRequest();
 
-        if (categoryDto is null)
+        if (productDto is null)
             return BadRequest();
 
-        await _categoryService.UpdateCategory(categoryDto);
+        await _productService.UpdateProduct(productDto);
 
-        return Ok(categoryDto);
+        return Ok(productDto);
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<ProductDTO>> Delete(int id)
+    {
+        var productDto = await _productService.GetProductById(id);
+        
+        if (productDto is null)
+            return NotFound("Product not found!");
+
+        await _productService.RemoveProduct(id);
+
+        return Ok(productDto);
     }
 }
 
