@@ -11,8 +11,8 @@ public class ProductService : IProductService
     private readonly JsonSerializerOptions _options;
     
     private const String apiEndpoint = "/api/products/";
-    private ProductViewModel productViewModel;
-    private IEnumerable<ProductViewModel> productsViewModel;
+    private ProductViewModel _productViewModel;
+    private IEnumerable<ProductViewModel> _productsViewModel;
 
     public ProductService(IHttpClientFactory clientFactory, JsonSerializerOptions options)
     {
@@ -30,14 +30,14 @@ public class ProductService : IProductService
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
 
-                productsViewModel = await JsonSerializer.DeserializeAsync<IEnumerable<ProductViewModel>>(apiResponse, _options);
+                _productsViewModel = await JsonSerializer.DeserializeAsync<IEnumerable<ProductViewModel>>(apiResponse, _options);
             }
             else
             {
                 return null;
             }
         }
-        return productsViewModel;
+        return _productsViewModel;
     }
 
     public async Task<ProductViewModel> FindProductById(int id)
@@ -49,15 +49,14 @@ public class ProductService : IProductService
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
-                productViewModel = await JsonSerializer.DeserializeAsync<ProductViewModel>(apiResponse, _options);
+                _productViewModel = await JsonSerializer.DeserializeAsync<ProductViewModel>(apiResponse, _options);
             }
             else
             {
                 return null;
             }
         }
-
-        return productViewModel;
+        return _productViewModel;
     }
 
     public async Task<ProductViewModel> CreateProduct(ProductViewModel productViewModel)
@@ -71,7 +70,7 @@ public class ProductService : IProductService
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
-                productViewModel = await JsonSerializer.DeserializeAsync<ProductViewModel>(apiResponse, _options);
+                _productViewModel = await JsonSerializer.DeserializeAsync<ProductViewModel>(apiResponse, _options);
             }
             else
             {
@@ -79,7 +78,7 @@ public class ProductService : IProductService
             }
         }
 
-        return productViewModel;
+        return _productViewModel;
     }
 
     public async Task<ProductViewModel> UpdateProduct(ProductViewModel productViewModel)
@@ -93,14 +92,14 @@ public class ProductService : IProductService
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
-                productViewModel = await JsonSerializer.DeserializeAsync<ProductViewModel>(apiResponse, _options);
+                _productViewModel = await JsonSerializer.DeserializeAsync<ProductViewModel>(apiResponse, _options);
             }
             else
             {
                 return null;
             }
         }
-        return productViewModel;
+        return _productViewModel;
     }
 
     public async Task<bool> DeleteProductById(int id)
