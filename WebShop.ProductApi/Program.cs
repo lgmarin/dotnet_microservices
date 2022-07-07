@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebShop.ProductApi.Context;
+using WebShop.ProductApi.Repositories;
+using WebShop.ProductApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,14 @@ builder.Services.AddDbContext<AppDbContext>(options=>
 );
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Register Repositories
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+//Register Services
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
