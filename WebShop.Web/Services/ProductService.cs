@@ -60,10 +60,10 @@ public class ProductService : IProductService
         return productViewModel;
     }
 
-    public async Task<ProductViewModel> CreateProduct(ProductViewModel productVM)
+    public async Task<ProductViewModel> CreateProduct(ProductViewModel productViewModel)
     {
         var client = _clientFactory.CreateClient("ProductApi");
-        StringContent content = new StringContent(JsonSerializer.Serialize(productVM),
+        StringContent content = new StringContent(JsonSerializer.Serialize(productViewModel),
             Encoding.UTF8, "application/json");
 
         using (var response = await client.PostAsync(apiEndpoint, content))
@@ -82,10 +82,10 @@ public class ProductService : IProductService
         return productViewModel;
     }
 
-    public async Task<ProductViewModel> UpdateProduct(ProductViewModel productVM)
+    public async Task<ProductViewModel> UpdateProduct(ProductViewModel productViewModel)
     {
         var client = _clientFactory.CreateClient("ProductApi");
-        StringContent content = new StringContent(JsonSerializer.Serialize(productVM),
+        StringContent content = new StringContent(JsonSerializer.Serialize(productViewModel),
             Encoding.UTF8, "application/json");
 
         using (var response = await client.PutAsync(apiEndpoint, content))
@@ -111,14 +111,9 @@ public class ProductService : IProductService
         {
             if (response.IsSuccessStatusCode)
             {
-                var apiResponse = await response.Content.ReadAsStreamAsync();
-                productViewModel = await JsonSerializer.DeserializeAsync<ProductViewModel>(apiResponse, _options);                
+                return true;
             }
-            else
-            {
-                return false;
-            }
+            return true;
         }
-        return true;
     }
 }
