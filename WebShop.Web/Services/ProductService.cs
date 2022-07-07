@@ -1,3 +1,4 @@
+using System.Text.Json;
 using WebShop.Web.Models;
 using WebShop.Web.Services.Contracts;
 
@@ -6,11 +7,16 @@ namespace WebShop.Web.Services;
 public class ProductService : IProductService
 {
     private readonly IHttpClientFactory _clientFactory;
+    private readonly JsonSerializerOptions _options;
+    
     private const String apiEndpoint = "/api/products/";
+    private ProductViewModel _productViewModel;
+    private IEnumerable<ProductViewModel> _productsViewModel;
 
-    public ProductService(IHttpClientFactory clientFactory)
+    public ProductService(IHttpClientFactory clientFactory, JsonSerializerOptions options)
     {
         _clientFactory = clientFactory;
+        _options = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
     }
 
     public async Task<IEnumerable<ProductViewModel>> GetAllProducts()
