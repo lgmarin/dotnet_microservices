@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebShop.Web.Models;
 using WebShop.Web.Services.Contracts;
 
@@ -27,11 +28,31 @@ public class ProductsController : Controller
         return View(result);
     }
 
-    [HttpPost]
+    [HttpGet]
     public async Task<IActionResult> CreateProduct()
     {
-        ViewBag.CategoryId = new SelectList(await 
-            _categoryService)
+        ViewBag.CategoryId = new SelectList(await
+            _categoryService.GetAllCategories(), "CategoryId", "Name");
+
+        return View();
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateProduct(ProductViewModel productViewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _productService.CreateProduct(productViewModel);
+
+            if (result is not null)
+                return RedirectToAction(nameof(Index));
+        }
+        else
+        {
+            ViewBag.CategoryId = new SelectList(await
+                _categoryService.GetAllCategories(), "CategoryId", "Name");
+        }
+        return View(productViewModel);
     }
 
     public IActionResult UpdateProduct()

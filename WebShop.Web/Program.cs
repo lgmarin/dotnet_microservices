@@ -10,6 +10,7 @@ builder.Services.AddHttpClient("ProductApi", c =>
     c.BaseAddress = new Uri(builder.Configuration["ServiceUri:ProductApis"]);
 });
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
