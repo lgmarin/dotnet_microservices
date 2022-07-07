@@ -5,6 +5,14 @@ namespace WebShop.Web.Services;
 
 public class ProductService : IProductService
 {
+    private readonly IHttpClientFactory _clientFactory;
+    private const String apiEndpoint = "/api/products/";
+
+    public ProductService(IHttpClientFactory clientFactory)
+    {
+        _clientFactory = clientFactory;
+    }
+
     public async Task<IEnumerable<ProductViewModel>> GetAllProducts()
     {
         throw new NotImplementedException();
