@@ -55,13 +55,47 @@ public class ProductsController : Controller
         return View(productViewModel);
     }
 
-    public IActionResult UpdateProduct()
+    [HttpGet]
+    public async Task<IActionResult> UpdateProduct(int id)
     {
-        throw new NotImplementedException();
+        ViewBag.CategoryId = new SelectList(await 
+            _categoryService.GetAllCategories(), "CategoryId", "Name");
+
+        var result = await _productService.FindProductById(id);
+
+        if (result is null)
+        {
+            return View("Error");
+        }
+
+        return View(result);
     }
 
-    public IActionResult DeleteProduct()
+    [HttpPost]
+    public async Task<IActionResult> UpdateProduct(ProductViewModel productViewModel)
     {
-        throw new NotImplementedException();
+        if (ModelState.IsValid)
+        {
+            var result = await _productService.UpdateProduct(productViewModel);
+
+            if (result is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        return View(productViewModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        var result = await _productService.FindProductById(id);
+
+        if (result is null)
+        {
+            return View("Error");
+        }
+
+        return View(result);
     }
 }
