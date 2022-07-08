@@ -12,7 +12,7 @@ public class CategoryService : ICategoryService
     private IEnumerable<CategoryViewModel> _categoriesViewModel;
     private const string apiEndpoint = "/api/categories/";
 
-    public CategoryService(IHttpClientFactory clientFactory, JsonSerializerOptions options)
+    public CategoryService(IHttpClientFactory clientFactory)
     {
         _clientFactory = clientFactory;
         _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
