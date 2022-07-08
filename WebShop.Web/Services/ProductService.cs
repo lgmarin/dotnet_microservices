@@ -14,7 +14,7 @@ public class ProductService : IProductService
     private ProductViewModel _productViewModel;
     private IEnumerable<ProductViewModel> _productsViewModel;
 
-    public ProductService(IHttpClientFactory clientFactory, JsonSerializerOptions options)
+    public ProductService(IHttpClientFactory clientFactory)
     {
         _clientFactory = clientFactory;
         _options = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
