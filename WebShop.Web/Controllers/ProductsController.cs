@@ -59,6 +59,7 @@ public class ProductsController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> UpdateProduct(int id)
     {
         ViewBag.CategoryId = new SelectList(await 
@@ -75,7 +76,7 @@ public class ProductsController : Controller
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> UpdateProduct(ProductViewModel productViewModel)
     {
         if (ModelState.IsValid)
@@ -91,7 +92,7 @@ public class ProductsController : Controller
     }
 
     [HttpGet]
-    [Authorize(Roles = Role.Admin)]
+    [Authorize]
     public async Task<IActionResult> DeleteProduct(int id)
     {
         var result = await _productService.FindProductById(id);
@@ -105,6 +106,7 @@ public class ProductsController : Controller
     }
     
     [HttpPost(), ActionName("DeleteProduct")]
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var result = await _productService.DeleteProductById(id);
