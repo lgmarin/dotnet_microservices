@@ -76,7 +76,7 @@ public class ProductsController : Controller
     }
 
     [HttpPost]
-    [Authorize(Roles = Role.Admin)]
+    [Authorize]
     public async Task<IActionResult> UpdateProduct(ProductViewModel productViewModel)
     {
         if (ModelState.IsValid)
