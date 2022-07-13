@@ -1,7 +1,10 @@
+using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebShop.IdentityServer.Configuration;
 using WebShop.IdentityServer.Data;
+using WebShop.IdentityServer.SeedDatabase;
+using WebShop.IdentityServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,9 @@ var builderIdentityServer = builder.Services.AddIdentityServer(options =>
 
 builderIdentityServer.AddDeveloperSigningCredential();
 
+builder.Services.AddScoped<IDatabaseSeedInitializer, DatabaseIdentityServerInitializer>();
+builder.Services.AddScoped<IProfileService, ProfileAppService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,8 +57,21 @@ app.UseRouting();
 app.UseIdentityServer();
 app.UseAuthorization();
 
+// Call Seed Initializer
+SeedDatabaseIdentityServer(app);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void SeedDatabaseIdentityServer(IApplicationBuilder app)
+{
+    using (var serviceScope = app.ApplicationServices.CreateScope())
+    {
+        var initRoleUsers = serviceScope.ServiceProvider.GetService<IDatabaseSeedInitializer>();
+        initRoleUsers.InitializeSeedRoles();
+        initRoleUsers.InitializeSeedUsers();
+    }
+}

@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run All" type="CompoundRunConfigurationType">
+    <toRun name="WebShop.IdentityServer" type="LaunchSettings" />
+    <toRun name="WebShop.ProductApi" type="LaunchSettings" />
+    <toRun name="WebShop.Web" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

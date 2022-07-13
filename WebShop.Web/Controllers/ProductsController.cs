@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebShop.Web.Models;
+using WebShop.Web.Roles;
 using WebShop.Web.Services.Contracts;
 
 namespace WebShop.Web.Controllers;
@@ -38,6 +40,7 @@ public class ProductsController : Controller
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateProduct(ProductViewModel productViewModel)
     {
         if (ModelState.IsValid)
@@ -56,6 +59,7 @@ public class ProductsController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> UpdateProduct(int id)
     {
         ViewBag.CategoryId = new SelectList(await 
@@ -72,6 +76,7 @@ public class ProductsController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> UpdateProduct(ProductViewModel productViewModel)
     {
         if (ModelState.IsValid)
@@ -87,6 +92,7 @@ public class ProductsController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> DeleteProduct(int id)
     {
         var result = await _productService.FindProductById(id);
@@ -100,6 +106,7 @@ public class ProductsController : Controller
     }
     
     [HttpPost(), ActionName("DeleteProduct")]
+    [Authorize(Roles = Role.Admin)]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var result = await _productService.DeleteProductById(id);
