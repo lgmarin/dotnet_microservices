@@ -17,6 +17,8 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
 using Duende.IdentityServer.Test;
+using Microsoft.AspNetCore.Identity;
+using WebShop.IdentityServer.Data;
 
 namespace IdentityServerHost.Quickstart.UI
 {
@@ -29,7 +31,11 @@ namespace IdentityServerHost.Quickstart.UI
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
+        //private readonly TestUserStore _users;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
@@ -41,12 +47,21 @@ namespace IdentityServerHost.Quickstart.UI
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IIdentityProviderStore identityProviderStore,
-            IEventService events,
-            TestUserStore users = null)
+            IEventService events, 
+            RoleManager<IdentityRole> roleManager, 
+            SignInManager<ApplicationUser> signInManager, 
+            UserManager<ApplicationUser> userManager
+            )
+
+        //TestUserStore users = null)
         {
             // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? throw new Exception("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");
+            //_users = users ?? throw new Exception("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");
 
+            _roleManager = roleManager;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            
             _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
@@ -112,10 +127,20 @@ namespace IdentityServerHost.Quickstart.UI
             if (ModelState.IsValid)
             {
                 // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
+                // if (_users.ValidateCredentials(model.Username, model.Password))
+                // {
+                //     var user = _users.FindByUsername(model.Username);
+                var result = await _signInManager.PasswordSignInAsync(
+                    model.Username,
+                    model.Password,
+                    model.RememberLogin,
+                    lockoutOnFailure: false);
+
+                // validate username/password against in-memory store
+                if (result.Succeeded)
                 {
-                    var user = _users.FindByUsername(model.Username);
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username, clientId: context?.Client.ClientId));
+                    var user = await _userManager.FindByNameAsync(model.Username);
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.Id, clientId: context?.Client.ClientId));
 
                     // only set explicit expiration here if user chooses "remember me". 
                     // otherwise we rely upon expiration configured in cookie middleware.
@@ -130,9 +155,9 @@ namespace IdentityServerHost.Quickstart.UI
                     };
 
                     // issue authentication cookie with subject ID and username
-                    var isuser = new IdentityServerUser(user.SubjectId)
+                    var isuser = new IdentityServerUser(user.Id)
                     {
-                        DisplayName = user.Username
+                        DisplayName = user.UserName
                     };
 
                     await HttpContext.SignInAsync(isuser, props);
