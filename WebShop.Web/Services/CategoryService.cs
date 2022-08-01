@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Text.Json;
 using WebShop.Web.Models;
 using WebShop.Web.Services.Contracts;
@@ -18,9 +19,10 @@ public class CategoryService : ICategoryService
         _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<IEnumerable<CategoryViewModel>> GetAllCategories()
+    public async Task<IEnumerable<CategoryViewModel>> GetAllCategories(string token)
     {
         var client = _clientFactory.CreateClient("ProductApi");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         using (var response = await client.GetAsync(apiEndpoint))
         {
