@@ -9,8 +9,6 @@ public class CategoryService : ICategoryService
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly JsonSerializerOptions _options;
-    
-    private IEnumerable<CategoryViewModel> _categoriesViewModel;
     private const string apiEndpoint = "/api/categories/";
 
     public CategoryService(IHttpClientFactory clientFactory)
@@ -24,17 +22,20 @@ public class CategoryService : ICategoryService
         var client = _clientFactory.CreateClient("ProductApi");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
+        IEnumerable<CategoryViewModel> _categoriesViewModel;
+        
         using (var response = await client.GetAsync(apiEndpoint))
         {
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
 
-                _categoriesViewModel = await JsonSerializer.DeserializeAsync<IEnumerable<CategoryViewModel>>(apiResponse, _options);
+                _categoriesViewModel = await JsonSerializer.
+                    DeserializeAsync<IEnumerable<CategoryViewModel>>(apiResponse, _options);
             }
             else
             {
-                return null;
+                throw new HttpRequestException(response.ReasonPhrase);
             }
         }
         return _categoriesViewModel;
