@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebShop.Web.Models;
+using WebShop.Web.Roles;
 using WebShop.Web.Services.Contracts;
 
 namespace WebShop.Web.Controllers;
@@ -38,6 +40,7 @@ public class ProductsController : Controller
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateProduct(ProductViewModel productViewModel)
     {
         if (ModelState.IsValid)
@@ -55,13 +58,63 @@ public class ProductsController : Controller
         return View(productViewModel);
     }
 
-    public IActionResult UpdateProduct()
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> UpdateProduct(int id)
     {
-        throw new NotImplementedException();
+        ViewBag.CategoryId = new SelectList(await 
+            _categoryService.GetAllCategories(), "CategoryId", "Name");
+
+        var result = await _productService.FindProductById(id);
+
+        if (result is null)
+        {
+            return View("Error");
+        }
+
+        return View(result);
     }
 
-    public IActionResult DeleteProduct()
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> UpdateProduct(ProductViewModel productViewModel)
     {
-        throw new NotImplementedException();
+        if (ModelState.IsValid)
+        {
+            var result = await _productService.UpdateProduct(productViewModel);
+
+            if (result is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        return View(productViewModel);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        var result = await _productService.FindProductById(id);
+ 
+        if (result is null)
+        {
+            return View("Error");
+        }
+
+        return View(result);
+    }
+    
+    [HttpPost(), ActionName("DeleteProduct")]
+    [Authorize(Roles = Role.Admin)]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var result = await _productService.DeleteProductById(id);
+ 
+        if (!result)
+        {
+            return View("Error");
+        }
+        return RedirectToAction("Index");
     }
 }
