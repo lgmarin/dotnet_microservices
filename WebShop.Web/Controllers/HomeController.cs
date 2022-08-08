@@ -27,6 +27,17 @@ public class HomeController : Controller
         
         return View();
     }
+    
+    [HttpGet]
+    public async Task<ActionResult<ProductViewModel>> ProductDetails(int id)
+    {
+        var product = await _productService.FindProductById(id, string.Empty);
+
+        if (product is null)
+            return View("Error");
+        
+        return View(product);
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
