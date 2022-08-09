@@ -84,6 +84,7 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+//Authorization Service
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ApiScope", policy =>
