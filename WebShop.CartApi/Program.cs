@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using WebShop.CartApi.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,13 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+// DATABASE CONNECTION
+var mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<AppDbContext>(options=>
+    options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection))  
+);
 
 var app = builder.Build();
 
