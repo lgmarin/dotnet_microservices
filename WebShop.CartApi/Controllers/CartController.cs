@@ -8,7 +8,7 @@ namespace WebShop.CartApi.Controllers;
 [ApiController]
 public class CartController : ControllerBase
 {
-    private ICartRepository _repository;
+    private readonly ICartRepository _repository;
 
 
     public CartController(ICartRepository repository)
@@ -16,27 +16,45 @@ public class CartController : ControllerBase
         _repository = repository;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<CartDTO>> GetById(string id)
+    [HttpGet("getcart/{id}")]
+    public async Task<ActionResult<CartDTO>> GetByUserId(string userId)
     {
-        throw new NotImplementedException();
+        var cart = await _repository.GetCartByUserId(userId);
+        if (cart is null)
+            return NotFound();
+
+        return Ok(cart);
     }
 
-    [HttpPost]
+    [HttpPost("addcart")]
     public async Task<ActionResult<CartDTO>> AddCart(CartDTO cartDto)
     {
-        throw new NotImplementedException();
-    }
+        var cart = await _repository.UpdateCart(cartDto);
 
-    [HttpPut]
+        if (cart is null)
+            return NotFound();
+
+        return Ok(cart);    }
+
+    [HttpPut("updatecart")]
     public async Task<ActionResult<CartDTO>> UpdateCart(CartDTO cartDto)
     {
-        throw new NotImplementedException();
+        var cart = await _repository.UpdateCart(cartDto);
+
+        if (cart is null)
+            return NotFound();
+
+        return Ok(cart);
     }
 
-    [HttpDelete]
+    [HttpDelete("deletecart/{id}")]
     public async Task<ActionResult<bool>> DeleteCart(int id)
     {
-        throw new NotImplementedException();
+        var status = await _repository.DeleteItemCart(id);
+
+        if (!status)
+            return BadRequest();
+
+        return Ok(status);
     }
 }
