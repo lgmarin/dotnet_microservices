@@ -24,4 +24,6 @@ public class ProductViewModel
     
     [Display(Name = "Categories")]
     public int CategoryId {get; set;}
+
+    public int Quantity { get; set; } = 1;
 }
