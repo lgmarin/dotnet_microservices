@@ -93,6 +93,16 @@ public class CartService : ICartService
 
     public async Task<bool> RemoveItemFromCart(int cartId, string token)
     {
-        throw new NotImplementedException();
+        var client = _clientFactory.CreateClient("ProductApi");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        using (var response = await client.DeleteAsync($"{ApiEndPoint}/deletecart/{cartId}"))
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return true;
+        }
     }
 }
