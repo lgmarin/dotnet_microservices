@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using WebShop.Web.Models;
 using WebShop.Web.Services.Contracts;
@@ -42,7 +43,27 @@ public class CartService : ICartService
 
     public async Task<CartViewModel> AddItemToCart(CartViewModel cartVM, string token)
     {
-        throw new NotImplementedException();
+        var client = _clientFactory.CreateClient("CartApi");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var content = new StringContent(JsonSerializer.Serialize(cartVM), 
+            Encoding.UTF8, "application/json");
+
+        using (var response = await client.PostAsync($"{ApiEndPoint}/addcart/", content))
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                var apiResponse = await response.Content.ReadAsStreamAsync();
+
+                _cartViewModel = await JsonSerializer.DeserializeAsync<CartViewModel>(apiResponse, _options);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        return _cartViewModel;
     }
 
     public async Task<CartViewModel> UpdateCart(CartViewModel carVM, string token)

@@ -20,6 +20,7 @@ public class CartController : ControllerBase
     public async Task<ActionResult<CartDTO>> GetByUserId(string userId)
     {
         var cart = await _repository.GetCartByUserId(userId);
+        
         if (cart is null)
             return NotFound();
 
@@ -34,7 +35,8 @@ public class CartController : ControllerBase
         if (cart is null)
             return NotFound();
 
-        return Ok(cart);    }
+        return Ok(cart);    
+    }
 
     [HttpPut("updatecart")]
     public async Task<ActionResult<CartDTO>> UpdateCart(CartDTO cartDto)

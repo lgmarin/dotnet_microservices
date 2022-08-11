@@ -67,7 +67,7 @@ public class ProductService : IProductService
         var client = _clientFactory.CreateClient("ProductApi");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         
-        StringContent content = new StringContent(JsonSerializer.Serialize(productViewModel),
+        var content = new StringContent(JsonSerializer.Serialize(productViewModel),
             Encoding.UTF8, "application/json");
 
         using (var response = await client.PostAsync(apiEndpoint, content))
