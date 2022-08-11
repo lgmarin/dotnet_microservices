@@ -1,0 +1,91 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch WebShop.IdentityServer",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-is",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/WebShop.IdentityServer/bin/Debug/net6.0/WebShop.IdentityServer.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/WebShop.IdentityServer",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+        },
+        {
+            "name": "Launch WebShop.ProductApi",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-prodapi",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/WebShop.ProductApi/bin/Debug/net6.0/WebShop.ProductApi.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/WebShop.ProductApi",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+        },
+        {
+            "name": "Launch WebShop.CartApi",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "publish-cartapi",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/WebShop.CartApi/bin/Debug/net6.0/WebShop.CartApi.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/WebShop.CartApi",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+        },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            "name": "Launch WebShop.Web",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-web",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/WebShop.Web/bin/Debug/net6.0/WebShop.Web.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/WebShop.Web",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Run All + Web",
+            "configurations": [
+                "Launch WebShop.IdentityServer",
+                "Launch WebShop.ProductApi",
+                "Launch WebShop.CartApi",
+                "Launch WebShop.Web"
+            ]
+        }
+    ]
+}
