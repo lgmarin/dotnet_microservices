@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch WebShop.IdentityServer",
+            "name": "WebShop.IdentityServer",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-is",
@@ -17,7 +17,7 @@
             },
         },
         {
-            "name": "Launch WebShop.ProductApi",
+            "name": "WebShop.ProductApi",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-prodapi",
@@ -32,7 +32,7 @@
             },
         },
         {
-            "name": "Launch WebShop.CartApi",
+            "name": "WebShop.CartApi",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "publish-cartapi",
@@ -50,7 +50,7 @@
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
             // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-            "name": "Launch WebShop.Web",
+            "name": "WebShop.Web",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-web",
@@ -81,10 +81,10 @@
         {
             "name": "Run All + Web",
             "configurations": [
-                "Launch WebShop.IdentityServer",
-                "Launch WebShop.ProductApi",
-                "Launch WebShop.CartApi",
-                "Launch WebShop.Web"
+                "WebShop.IdentityServer",
+                "WebShop.ProductApi",
+                "WebShop.CartApi",
+                "WebShop.Web"
             ]
         }
     ]
