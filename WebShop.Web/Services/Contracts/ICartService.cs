@@ -2,7 +2,7 @@ using WebShop.Web.Models;
 
 namespace WebShop.Web.Services.Contracts;
 
-public class ICartService
+public interface ICartService
 {
     Task<CartViewModel> GetCartByUserId(string userId, string token);
     Task<CartViewModel> AddItemToCart(CartViewModel cartVM, string token);
