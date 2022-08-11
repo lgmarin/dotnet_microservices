@@ -1,13 +1,10 @@
-using Microsoft.Build.Framework;
+namespace WebShop.Web.Models;
 
-namespace WebShop.CartApi.DTOs;
-
-public class CartHeaderDTO
+public class CartHeaderViewModel
 {
     public int Id { get; set; }
-    
-    [Required]
     public string UserId { get; set; } = string.Empty;
     public string CouponCode { get; set; } = string.Empty;
 
+    public double TotalAmount { get; set; } = 0.00d;
 }
