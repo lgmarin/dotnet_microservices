@@ -56,8 +56,17 @@ builder.Services.AddHttpClient<IProductService, ProductService>("ProductApi", c 
     c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-ProductApi");
 });
 
+builder.Services.AddHttpClient<ICartService, CartService>("CartApi", c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["ServiceUri:CartApi"]);
+    c.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+    c.DefaultRequestHeaders.Add("Keep-Alive", "3600");
+    c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-CartApi");
+});
+
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 
