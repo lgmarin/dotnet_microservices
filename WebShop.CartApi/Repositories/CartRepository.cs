@@ -62,14 +62,16 @@ public class Cartrepository : ICartRepository
             var totalItems = _context.CartItems.Count(c => c.CartHeaderId == cartItem.CartHeaderId);
 
             _context.CartItems.Remove(cartItem);
+            await _context.SaveChangesAsync();
         
             if (totalItems == 1)
             {
                 var cartHeader = await _context.CartHeaders.FirstOrDefaultAsync(c => c.Id == cartItem.CartHeaderId);
+
                 _context.CartHeaders.Remove(cartHeader);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return true;
         }
         catch (Exception e)
