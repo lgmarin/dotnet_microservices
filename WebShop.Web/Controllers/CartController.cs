@@ -44,6 +44,18 @@ public class CartController : Controller
         return cart;
     }
 
+    private async Task<IActionResult> RemoveItem(int id)
+    {
+        var result = await _cartService.RemoveItemFromCart(id, await GetAccessToken());
+
+        if (result)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+        
+        return View(id);
+    }
+
     private string GetUserId()
     {
         return User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
