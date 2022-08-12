@@ -13,7 +13,7 @@ public class CartService : ICartService
     private const string ApiEndPoint = "/api/cart";
     private CartViewModel _cartViewModel = new CartViewModel();
 
-    public CartService(IHttpClientFactory clientFactory, JsonSerializerOptions? options)
+    public CartService(IHttpClientFactory clientFactory)
     {
         _clientFactory = clientFactory;
         _options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
@@ -74,13 +74,15 @@ public class CartService : ICartService
         var content = new StringContent(JsonSerializer.Serialize(cartVM), 
             Encoding.UTF8, "application/json");
 
+        CartViewModel updatedCartViewModel = new();
+
         using (var response = await client.PutAsync($"{ApiEndPoint}/addcart/", content))
         {
             if (response.IsSuccessStatusCode)
             {
                 var apiResponse = await response.Content.ReadAsStreamAsync();
 
-                _cartViewModel = await JsonSerializer.DeserializeAsync<CartViewModel>(apiResponse, _options);
+                updatedCartViewModel = await JsonSerializer.DeserializeAsync<CartViewModel>(apiResponse, _options);
             }
             else
             {
@@ -88,7 +90,7 @@ public class CartService : ICartService
             }
         }
 
-        return _cartViewModel;
+        return updatedCartViewModel;
     }
 
     public async Task<bool> RemoveItemFromCart(int cartId, string token)
