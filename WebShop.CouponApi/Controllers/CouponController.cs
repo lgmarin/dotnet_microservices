@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebShop.CouponApi.DTOs;
 using WebShop.CouponApi.Repositories;
@@ -15,6 +16,8 @@ public class CouponController : ControllerBase
         _repository = repository;
     }
 
+    [HttpGet("{couponCode}")]
+    [Authorize]
     public async Task<ActionResult<CouponDTO>> GetDiscountByCode(string couponCode)
     {
         var coupon = await _repository.GetCouponByCode(couponCode);
