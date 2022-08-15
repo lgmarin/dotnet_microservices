@@ -20,7 +20,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Context" />
       <Folder Include="Controllers" />
+      <Folder Include="DTOs" />
+      <Folder Include="Repositories" />
     </ItemGroup>
 
 </Project>
