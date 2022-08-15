@@ -23,7 +23,7 @@ public class AppDbContext : DbContext
 
         mb.Entity<Coupon>().HasData(new Coupon
         {
-            CouponId = 1,
+            CouponId = 2,
             CouponCode = "PROMO20",
             Discount = 20
         });
