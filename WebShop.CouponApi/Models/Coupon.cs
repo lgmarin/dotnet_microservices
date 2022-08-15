@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace WebShop.CouponApi.Models;
@@ -12,5 +13,6 @@ public class Coupon
     public string? CouponCode { get; set; }
     
     [Required]
+    [Column(TypeName = "decimal(10,2)")]
     public decimal Discount { get; set; }
 }
