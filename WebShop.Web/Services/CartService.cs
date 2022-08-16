@@ -107,4 +107,24 @@ public class CartService : ICartService
             return true;
         }
     }
+
+    public async Task<bool> ClearCart(string userId, string token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> ApplyCoupon(CartViewModel cartVM, string couponCode, string token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> RemoveCoupon(string userId, string token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<CartViewModel> Checkout(CartHeaderViewModel cartHeader, string token)
+    {
+        throw new NotImplementedException();
+    }
 }
