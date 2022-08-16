@@ -29,7 +29,7 @@ public class CartController : Controller
         return View(cartViewModel);
     }
 
-    private async Task<CartViewModel> GetCartByUser()
+    public async Task<CartViewModel> GetCartByUser()
     {
         var cart = await _cartService.GetCartByUserId(GetUserId(), await GetAccessToken());
 
@@ -44,7 +44,7 @@ public class CartController : Controller
         return cart;
     }
 
-    private async Task<IActionResult> RemoveItem(int id)
+    public async Task<IActionResult> RemoveItem(int id)
     {
         var result = await _cartService.RemoveItemFromCart(id, await GetAccessToken());
 
@@ -55,6 +55,22 @@ public class CartController : Controller
         
         return View(id);
     }
+
+    public async Task<IActionResult> ApplyDiscount()
+    {
+        throw new NotImplementedException();
+    }
+    
+    public async Task<IActionResult> DeleteCoupon()    
+    {
+        throw new NotImplementedException();
+    }
+    
+    public async Task<IActionResult> Checkout()
+    {
+        throw new NotImplementedException();
+    }
+
 
     private string GetUserId()
     {
