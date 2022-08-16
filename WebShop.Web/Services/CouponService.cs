@@ -11,7 +11,7 @@ public class CouponService : ICouponService
     private JsonSerializerOptions _options;
 
     private const string apiEndpoint = "/api/coupon";
-    private CouponViewModel _couponViewModel;
+    private CouponViewModel _couponViewModel = new CouponViewModel();
 
 
     public CouponService(IHttpClientFactory clientFactory)
