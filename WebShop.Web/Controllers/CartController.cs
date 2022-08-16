@@ -9,10 +9,12 @@ namespace WebShop.Web.Controllers;
 public class CartController : Controller
 {
     private readonly ICartService _cartService;
+    private readonly ICouponService _couponService;
 
-    public CartController(ICartService cartService)
+    public CartController(ICartService cartService, ICouponService couponService)
     {
         _cartService = cartService;
+        _couponService = couponService;
     }
 
     [Authorize]
@@ -29,22 +31,33 @@ public class CartController : Controller
         return View(cartViewModel);
     }
 
-    private async Task<CartViewModel> GetCartByUser()
+    public async Task<CartViewModel> GetCartByUser()
     {
         var cart = await _cartService.GetCartByUserId(GetUserId(), await GetAccessToken());
 
-        if (cart?.CartHeader is null)
+        if (cart?.CartHeader is not null)
         {
+            if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
+            {
+                var coupon = await _couponService.GetCouponByCode(cart.CartHeader.CouponCode, await GetAccessToken());
+
+                if (coupon.CouponCode is not null)
+                {
+                    cart.CartHeader.Discount = coupon.Discount;
+                }
+            }
             foreach (var item in cart.CartItems)
             {
                 cart.CartHeader.TotalAmount += (item.Product.Price * item.Quantity);
             }
+            
+            cart.CartHeader.TotalAmount = cart.CartHeader.TotalAmount - (cart.CartHeader.TotalAmount * cart.CartHeader.Discount)/100;
         }
 
         return cart;
     }
 
-    private async Task<IActionResult> RemoveItem(int id)
+    public async Task<IActionResult> RemoveItem(int id)
     {
         var result = await _cartService.RemoveItemFromCart(id, await GetAccessToken());
 
@@ -55,6 +68,44 @@ public class CartController : Controller
         
         return View(id);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ApplyCoupon(CartViewModel cartViewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _cartService.ApplyCoupon(cartViewModel, await GetAccessToken());
+
+            if (result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteCoupon()    
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _cartService.RemoveCoupon(GetUserId(), await GetAccessToken());
+
+            if (result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+    
+    public async Task<IActionResult> Checkout()
+    {
+        throw new NotImplementedException();
+    }
+
 
     private string GetUserId()
     {

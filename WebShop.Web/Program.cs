@@ -64,9 +64,18 @@ builder.Services.AddHttpClient<ICartService, CartService>("CartApi", c =>
     c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-CartApi");
 });
 
+builder.Services.AddHttpClient<ICouponService, CouponService>("CouponApi", c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["ServiceUri:CouponApi"]);
+    c.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+    c.DefaultRequestHeaders.Add("Keep-Alive", "3600");
+    c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-CouponApi");
+});
+
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 
 var app = builder.Build();
 

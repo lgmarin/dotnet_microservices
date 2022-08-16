@@ -99,16 +99,7 @@ public class Cartrepository : ICartRepository
         return false;
     }
 
-    public async Task<bool> ApplyCoupon(string userId, string couponCode)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<bool> DeleteCoupon(string userId, string couponCode)
-    {
-        throw new NotImplementedException();
-    }
-    
+  
     private async Task SaveProductInDB(CartDTO cartDto, Cart cart)
     {
         var product = await _context.Products.FirstOrDefaultAsync(p =>
@@ -155,5 +146,43 @@ public class Cartrepository : ICartRepository
             cart.CartItems.FirstOrDefault().CartHeaderId = cartDetail.CartHeaderId;
             _context.CartItems.Update(cart.CartItems.FirstOrDefault());
         }
+    }
+    
+    public async Task<bool> ApplyCoupon(string userId, string couponCode)
+    {
+        var cartHeaderApply = await _context.CartHeaders.
+            FirstOrDefaultAsync(c => c.UserId == userId);
+
+        if (cartHeaderApply is not null)
+        {
+            cartHeaderApply.CouponCode = couponCode;
+
+            _context.CartHeaders.Update(cartHeaderApply);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<bool> DeleteCoupon(string userId)
+    {
+        var cartHeaderDel = await _context.CartHeaders.
+            FirstOrDefaultAsync(c => c.UserId == userId);
+
+        if (cartHeaderDel is not null)
+        {
+            cartHeaderDel.CouponCode = "";
+
+            _context.CartHeaders.Update(cartHeaderDel);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        return false;
     }
 }
