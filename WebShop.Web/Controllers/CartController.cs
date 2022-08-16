@@ -56,14 +56,36 @@ public class CartController : Controller
         return View(id);
     }
 
-    public async Task<IActionResult> ApplyDiscount()
+    [HttpPost]
+    public async Task<IActionResult> ApplyCoupon(CartViewModel cartViewModel)
     {
-        throw new NotImplementedException();
+        if (ModelState.IsValid)
+        {
+            var result = await _cartService.ApplyCoupon(cartViewModel, await GetAccessToken());
+
+            if (result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        return RedirectToAction(nameof(Index));
     }
     
+    [HttpDelete]
     public async Task<IActionResult> DeleteCoupon()    
     {
-        throw new NotImplementedException();
+        if (ModelState.IsValid)
+        {
+            var result = await _cartService.RemoveCoupon(GetUserId(), await GetAccessToken());
+
+            if (result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        return RedirectToAction(nameof(Index));
     }
     
     public async Task<IActionResult> Checkout()
