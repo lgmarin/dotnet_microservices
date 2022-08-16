@@ -150,10 +150,22 @@ public class Cartrepository : ICartRepository
     
     public async Task<bool> ApplyCoupon(string userId, string couponCode)
     {
-        throw new NotImplementedException();
+        var cartHeaderApply = await _context.CartHeaders.
+            FirstOrDefaultAsync(c => c.UserId == userId);
+
+        if (cartHeaderApply is not null)
+        {
+            cartHeaderApply.CouponCode = couponCode;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        return false;
     }
 
-    public async Task<bool> DeleteCoupon(string userId, string couponCode)
+    public async Task<bool> DeleteCoupon(string userId)
     {
         var cartHeaderDel = await _context.CartHeaders.
             FirstOrDefaultAsync(c => c.UserId == userId);
