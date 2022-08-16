@@ -9,10 +9,12 @@ namespace WebShop.Web.Controllers;
 public class CartController : Controller
 {
     private readonly ICartService _cartService;
+    private readonly ICouponService _couponService;
 
-    public CartController(ICartService cartService)
+    public CartController(ICartService cartService, ICouponService couponService)
     {
         _cartService = cartService;
+        _couponService = couponService;
     }
 
     [Authorize]
@@ -33,12 +35,24 @@ public class CartController : Controller
     {
         var cart = await _cartService.GetCartByUserId(GetUserId(), await GetAccessToken());
 
-        if (cart?.CartHeader is null)
+        if (cart?.CartHeader is not null)
         {
+            if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
+            {
+                var coupon = await _couponService.GetCouponByCode(cart.CartHeader.CouponCode, await GetAccessToken());
+
+                if (coupon.CouponCode is not null)
+                {
+                    cart.CartHeader.Discount = coupon.Discount;
+                }
+            }
             foreach (var item in cart.CartItems)
             {
                 cart.CartHeader.TotalAmount += (item.Product.Price * item.Quantity);
             }
+            
+            cart.CartHeader.TotalAmount = cart.CartHeader.TotalAmount *
+                (cart.CartHeader.TotalAmount * cart.CartHeader.Discount)/100;
         }
 
         return cart;
