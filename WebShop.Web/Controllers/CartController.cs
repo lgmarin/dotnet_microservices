@@ -51,8 +51,7 @@ public class CartController : Controller
                 cart.CartHeader.TotalAmount += (item.Product.Price * item.Quantity);
             }
             
-            cart.CartHeader.TotalAmount = cart.CartHeader.TotalAmount *
-                (cart.CartHeader.TotalAmount * cart.CartHeader.Discount)/100;
+            cart.CartHeader.TotalAmount = cart.CartHeader.TotalAmount - (cart.CartHeader.TotalAmount * cart.CartHeader.Discount)/100;
         }
 
         return cart;
