@@ -5,5 +5,5 @@ namespace WebShop.Web.Services.Contracts;
 
 public interface ICouponService
 {
-    Task<CouponViewModel> GetCouponByCode(string couponCode);
+    Task<CouponViewModel> GetCouponByCode(string couponCode, string token);
 }

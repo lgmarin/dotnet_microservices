@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Text.Json;
 using WebShop.Web.Models;
 using WebShop.Web.Services.Contracts;
@@ -19,8 +20,23 @@ public class CouponService : ICouponService
         _options = new JsonSerializerOptions() {PropertyNameCaseInsensitive = true};
     }
 
-    public async Task<CouponViewModel> GetCouponByCode(string couponCode)
+    public async Task<CouponViewModel> GetCouponByCode(string couponCode, string token)
     {
-        throw new NotImplementedException();
+        var client = _clientFactory.CreateClient("CouponApi");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        using (var response = await client.GetAsync($"{apiEndpoint}/{couponCode}"))
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                var apiResponse = await response.Content.ReadAsStreamAsync();
+
+                _couponViewModel = await JsonSerializer.DeserializeAsync<CouponViewModel>(apiResponse, _options);
+
+                return _couponViewModel;
+            }
+        }
+
+        return null;
     }
 }
