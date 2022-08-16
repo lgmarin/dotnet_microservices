@@ -72,4 +72,17 @@ public class CartController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpDelete("deletecoupon/{userId}")]
+    public async Task<ActionResult<CartDTO>> DeleteCoupon(string userId)
+    {
+        var result = await _repository.DeleteCoupon(userId);
+
+        if (!result)
+        {
+            return NotFound($"Coupon not found for userId: {userId}");
+        }
+
+        return Ok(result);
+    }
 }
