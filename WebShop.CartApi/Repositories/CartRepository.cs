@@ -157,6 +157,8 @@ public class Cartrepository : ICartRepository
         {
             cartHeaderApply.CouponCode = couponCode;
 
+            _context.CartHeaders.Update(cartHeaderApply);
+
             await _context.SaveChangesAsync();
 
             return true;
