@@ -72,10 +72,11 @@ builder.Services.AddHttpClient<ICouponService, CouponService>("CouponApi", c =>
     c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-CouponApi");
 });
 
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 var app = builder.Build();
 

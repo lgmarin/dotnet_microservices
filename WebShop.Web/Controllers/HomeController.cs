@@ -31,9 +31,11 @@ public class HomeController : Controller
     }
     
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<ProductViewModel>> ProductDetails(int id)
     {
-        var product = await _productService.FindProductById(id, string.Empty);
+        var token = await HttpContext.GetTokenAsync("access-token");
+        var product = await _productService.FindProductById(id, token);
 
         if (product is null)
             return View("Error");
