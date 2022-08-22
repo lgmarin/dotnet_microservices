@@ -101,9 +101,11 @@ public class CartController : Controller
         return RedirectToAction(nameof(Index));
     }
     
+    [HttpGet]
     public async Task<IActionResult> Checkout()
     {
-        throw new NotImplementedException();
+        var cartViewModel = await GetCartByUser();
+        return View(cartViewModel);
     }
 
 
