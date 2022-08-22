@@ -1,3 +1,5 @@
+using WebShop.CartApi.Models;
+
 namespace WebShop.CartApi.DTOs;
 
 public class CheckoutHeaderDTO
@@ -17,5 +19,8 @@ public class CheckoutHeaderDTO
     public string CardNumber { get; set; } = string.Empty;
     public string NameOnCard { get; set; } = string.Empty;
     public string CVV { get; set; } = string.Empty;
-    public string ExpireMonthYear { get; set; } = string.Empty; 
+    public string ExpireMonthYear { get; set; } = string.Empty;
+    
+    public int CartTotalItems { get; set; }
+    public IEnumerable<CartItem>? CartItems { get; set; }
 }
