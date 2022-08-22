@@ -124,6 +124,12 @@ public class CartController : Controller
         return View(cartViewModel);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> CheckoutCompleted()
+    {
+        
+    }
+
 
 
     private string GetUserId()
