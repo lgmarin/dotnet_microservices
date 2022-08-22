@@ -12,6 +12,7 @@ public class CartService : ICartService
     private readonly JsonSerializerOptions? _options;
     private const string ApiEndPoint = "/api/cart";
     private CartViewModel _cartViewModel = new CartViewModel();
+    private CartHeaderViewModel _cartHeaderViewModel = new CartHeaderViewModel();
 
     public CartService(IHttpClientFactory clientFactory)
     {

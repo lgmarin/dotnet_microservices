@@ -108,6 +108,23 @@ public class CartController : Controller
         return View(cartViewModel);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Checkout(CartViewModel cartViewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _cartService.Checkout(cartViewModel.CartHeader, await GetAccessToken());
+
+            if (result is not null)
+            {
+                return RedirectToAction(nameof(CheckoutCompleted));
+            }
+        }
+
+        return View(cartViewModel);
+    }
+
+
 
     private string GetUserId()
     {
