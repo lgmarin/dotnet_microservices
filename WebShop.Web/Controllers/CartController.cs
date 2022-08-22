@@ -101,12 +101,36 @@ public class CartController : Controller
         return RedirectToAction(nameof(Index));
     }
     
+    [HttpGet]
     public async Task<IActionResult> Checkout()
     {
-        throw new NotImplementedException();
+        var cartViewModel = await GetCartByUser();
+        return View(cartViewModel);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Checkout(CartViewModel cartViewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _cartService.Checkout(cartViewModel.CartHeader, await GetAccessToken());
 
+            if (result is not null)
+            {
+                return RedirectToAction(nameof(CheckoutCompleted));
+            }
+        }
+
+        return View(cartViewModel);
+    }
+
+    [HttpGet]
+    public IActionResult CheckoutCompleted()
+    {
+        return View();
+    }
+
+    
     private string GetUserId()
     {
         return User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;

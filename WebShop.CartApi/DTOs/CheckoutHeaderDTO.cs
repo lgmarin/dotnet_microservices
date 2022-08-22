@@ -1,6 +1,8 @@
-namespace WebShop.Web.Models;
+using WebShop.CartApi.Models;
 
-public class CartHeaderViewModel
+namespace WebShop.CartApi.DTOs;
+
+public class CheckoutHeaderDTO
 {
     public int Id { get; set; }
     public string UserId { get; set; } = string.Empty;
@@ -19,4 +21,6 @@ public class CartHeaderViewModel
     public string CVV { get; set; } = string.Empty;
     public string ExpireMonthYear { get; set; } = string.Empty;
     
+    public int CartTotalItems { get; set; }
+    public IEnumerable<CartItem>? CartItems { get; set; }
 }
