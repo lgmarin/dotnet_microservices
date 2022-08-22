@@ -125,13 +125,12 @@ public class CartController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> CheckoutCompleted()
+    public IActionResult CheckoutCompleted()
     {
-        
+        return View();
     }
 
-
-
+    
     private string GetUserId()
     {
         return User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
