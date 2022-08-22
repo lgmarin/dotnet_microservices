@@ -13,6 +13,7 @@ public class CartHeaderViewModel
     public string LastName { get; set; } = string.Empty;
     public DateTime DateTime { get; set; }
     public string Telephone { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
     public string CardNumber { get; set; } = string.Empty;
     public string NameOnCard { get; set; } = string.Empty;
     public string CVV { get; set; } = string.Empty;
